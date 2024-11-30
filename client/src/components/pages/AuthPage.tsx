@@ -1,50 +1,55 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { loginUser } from "../redux/slices/userSlice";
-import { AppDispatch } from "../redux/store";
+import React, { useState, useEffect } from "react";
+import { useUser } from "../../features/user/useUser"; // useUser hook to manage login and signup
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const AuthPage: React.FC = () => {
-  const [email, setEmail] = useState("");
+  const [isLogin, setIsLogin] = useState(true);
+  const { login, signup, error, token } = useUser();
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Initialize navigate
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // If the token is available, navigate to the todolist page
+  useEffect(() => {
+    if (token) {
+      navigate("/todolist"); // Replace with your actual todolist route
+    }
+  }, [token, navigate]); // Run this when token or navigate changes
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const token = await dispatch(loginUser({ email, password })).unwrap();
-      localStorage.setItem("token", token); // Save token to local storage
-      navigate("/todolist");
-    } catch (err) {
-      console.error("Failed to login: ", err);
+    if (isLogin) {
+      login(username, password); // Call login function
+    } else {
+      signup(username, password); // Call signup function
     }
   };
 
+  if (error) {
+    return <div className="error-message">{error}</div>;
+  }
+
   return (
-    <div>
-      <h2>Login</h2>
+    <div className="auth-container">
+      <h2>{isLogin ? "Login" : "Sign Up"}</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit">{isLogin ? "Login" : "Sign Up"}</button>
       </form>
+      <button onClick={() => setIsLogin(!isLogin)}>
+        {isLogin ? "Create an account" : "Already have an account?"}
+      </button>
     </div>
   );
 };

@@ -34,6 +34,25 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const signupUser = createAsyncThunk(
+  "user/signup",
+  async (
+    credentials: { username: string; password: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await api.post("/auth/signup", credentials); // Endpoint for signup
+      return response.data.token;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        return rejectWithValue(
+          error.response?.data?.message || "Failed to sign up"
+        );
+      }
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,

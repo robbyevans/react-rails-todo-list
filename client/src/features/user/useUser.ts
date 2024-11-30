@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../../store/hook";
-import { loginUser, logout } from "./userSlice";
+import { loginUser, signupUser, logout } from "./userSlice";
 import {
   selectUserToken,
   selectUserStatus,
@@ -16,9 +16,13 @@ export const useUser = () => {
     dispatch(loginUser({ username, password }));
   };
 
+  const signup = (username: string, password: string) => {
+    dispatch(signupUser({ username, password }));
+  };
+
   const userLogout = () => {
     dispatch(logout());
   };
 
-  return { token, status, error, login, userLogout };
+  return { token, status, error, login, signup, userLogout };
 };
