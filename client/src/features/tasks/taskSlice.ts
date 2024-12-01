@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../utils/api";
 import { AxiosError } from "axios";
 import { RootState } from "../../store/store";
+import { logout } from "../user/userSlice";
 
 interface Task {
   id: number;
@@ -150,6 +151,11 @@ const taskSlice = createSlice({
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
         state.tasks = state.tasks.filter((task) => task.id !== action.payload); // Remove deleted task
+      })
+      .addCase(logout, (state) => {
+        state.tasks = [];
+        state.status = "idle";
+        state.error = null;
       });
   },
 });

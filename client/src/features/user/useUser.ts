@@ -12,11 +12,12 @@ export const useUser = () => {
   const status = useAppSelector(selectUserStatus);
   const error = useAppSelector(selectUserError);
 
-  const login = (username: string, password: string) => {
+  const handleLogin = (username: string, password: string) => {
     dispatch(loginUser({ username, password }));
   };
 
-  const signup = (
+  const isUserAuthenticated = !!token;
+  const handleSignup = (
     username: string,
     password: string,
     passwordConfirmation: string
@@ -24,9 +25,16 @@ export const useUser = () => {
     dispatch(signupUser({ username, password, passwordConfirmation }));
   };
 
-  const userLogout = () => {
+  const handleLogout = () => {
     dispatch(logout());
   };
 
-  return { token, status, error, login, signup, userLogout };
+  return {
+    status,
+    error,
+    isUserAuthenticated,
+    handleLogin,
+    handleSignup,
+    handleLogout,
+  };
 };

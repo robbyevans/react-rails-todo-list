@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const Container = styled.div`
   max-width: 400px;
@@ -6,6 +6,7 @@ export const Container = styled.div`
   padding: 2rem;
   background-color: #ffffff;
   border-radius: 8px;
+  position: relative;
 `;
 
 export const BackButton = styled.button`
@@ -73,4 +74,54 @@ export const ToggleButton = styled.button`
 export const ErrorMessage = styled.div`
   color: ${(props) => props.theme.colors.danger};
   margin-top: 1rem;
+`;
+
+/* Toast Message Styles */
+
+const slideDown = keyframes`
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+`;
+
+export const ToastMessage = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: ${(props) => props.theme.colors.success};
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+  animation: ${slideDown} 0.3s ease-out forwards,
+    fadeOut 0.5s ease-out 2.5s forwards;
+  z-index: 1000;
+
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+    }
+  }
+`;
+
+const progressBar = keyframes`
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+`;
+
+export const ProgressBar = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background-color: ${(props) => props.theme.colors.primaryDark};
+  animation: ${progressBar} 3s linear forwards;
+  width: 100%;
 `;

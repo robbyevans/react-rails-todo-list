@@ -2,34 +2,56 @@ import React, { useState, useEffect } from "react";
 import { useUser } from "../../../features/user/useUser";
 import { useNavigate } from "react-router-dom";
 import * as S from "./styles.ts";
-
 import { FaArrowLeft } from "react-icons/fa";
 
 const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const { login, signup, error, token } = useUser();
+  const { handleLogin, handleSignup, error, status, isUserAuthenticated } =
+    useUser();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (token) {
+    if (isUserAuthenticated) {
       navigate("/todolist");
     }
-  }, [token, navigate]);
+  }, [isUserAuthenticated, navigate]);
+
+  useEffect(() => {
+    if (status === "loading") {
+      setToastMessage(isLogin ? "Logging in..." : "Signing up...");
+      setShowToast(true);
+    } else if (status === "succeeded") {
+      setToastMessage(isLogin ? "Login successful!" : "Signup successful!");
+      setShowToast(true);
+    } else if (status === "failed") {
+      setToastMessage(error || "An error occurred.");
+      setShowToast(true);
+    }
+  }, [status, error, isLogin]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isLogin) {
-      login(username, password);
+      handleLogin(username, password);
     } else {
-      signup(username, password, passwordConfirmation);
+      handleSignup(username, password, passwordConfirmation);
     }
   };
 
   return (
     <S.Container>
+      {showToast && (
+        <S.ToastMessage onAnimationEnd={() => setShowToast(false)}>
+          {toastMessage}
+          <S.ProgressBar />
+        </S.ToastMessage>
+      )}
       <S.BackButton onClick={() => navigate("/")}>
         <FaArrowLeft />
         Back

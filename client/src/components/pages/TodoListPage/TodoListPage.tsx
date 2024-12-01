@@ -6,7 +6,7 @@ import { useUser } from "../../../features/user/useUser";
 
 const TodoListPage: React.FC = () => {
   const { tasks, loadTasks, createTask, updateTask, deleteTask } = useTasks();
-  const { token, userLogout } = useUser();
+  const { isUserAuthenticated, handleLogout } = useUser();
   const navigate = useNavigate();
 
   const [taskTitle, setTaskTitle] = useState("");
@@ -16,12 +16,12 @@ const TodoListPage: React.FC = () => {
   } | null>(null);
 
   useEffect(() => {
-    if (!token) {
+    if (!isUserAuthenticated) {
       navigate("/auth");
     } else {
       loadTasks();
     }
-  }, [token, navigate]);
+  }, [isUserAuthenticated, navigate]);
 
   const handleCreateTask = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,8 +49,8 @@ const TodoListPage: React.FC = () => {
     setTaskTitle(task.title);
   };
 
-  const handleLogout = () => {
-    userLogout();
+  const handleUserLogout = () => {
+    handleLogout();
     navigate("/auth");
   };
 
@@ -58,7 +58,7 @@ const TodoListPage: React.FC = () => {
     <S.Container>
       <S.Header>
         <S.Title>Your Tasks</S.Title>
-        <S.LogoutButton onClick={handleLogout}>Logout</S.LogoutButton>
+        <S.LogoutButton onClick={handleUserLogout}>Logout</S.LogoutButton>
       </S.Header>
 
       <S.Form onSubmit={editingTask ? handleUpdateTask : handleCreateTask}>
