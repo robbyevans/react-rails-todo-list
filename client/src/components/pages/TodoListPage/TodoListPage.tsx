@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useTasks } from "../../features/tasks/useTasks"; // Hook to fetch tasks
+import { useTasks } from "../../../features/tasks/useTasks";
 import { useNavigate } from "react-router-dom";
+import * as S from "./styles";
+import { useUser } from "../../../features/user/useUser";
 
 const TodoListPage: React.FC = () => {
   const { tasks, loadTasks, createTask, updateTask, deleteTask } = useTasks();
+  const { token, userLogout } = useUser();
   const navigate = useNavigate();
 
-  // States for handling form data
   const [taskTitle, setTaskTitle] = useState("");
   const [editingTask, setEditingTask] = useState<{
     id: number;
@@ -14,71 +16,79 @@ const TodoListPage: React.FC = () => {
   } | null>(null);
 
   useEffect(() => {
-    loadTasks(); // Fetch tasks on initial load
-  }, []);
+    if (!token) {
+      navigate("/auth");
+    } else {
+      loadTasks();
+    }
+  }, [token, navigate]);
 
-  // Navigate to auth page if tasks are not available (user not authenticated)
-  if (!tasks) {
-    navigate("/auth");
-  }
-
-  // Handle task creation
   const handleCreateTask = (e: React.FormEvent) => {
     e.preventDefault();
     if (taskTitle) {
       createTask({ title: taskTitle });
-      setTaskTitle(""); // Clear input after task is created
+      setTaskTitle("");
     }
   };
 
-  // Handle task update
   const handleUpdateTask = (e: React.FormEvent) => {
     e.preventDefault();
     if (editingTask && taskTitle) {
       updateTask(editingTask.id, { title: taskTitle });
-      setEditingTask(null); // Clear the editing state
-      setTaskTitle(""); // Clear input after updating task
+      setEditingTask(null);
+      setTaskTitle("");
     }
   };
 
-  // Handle task deletion
   const handleDeleteTask = (taskId: number) => {
     deleteTask(taskId);
   };
 
-  // Set the task to be edited
   const handleEditTask = (task: { id: number; title: string }) => {
     setEditingTask(task);
     setTaskTitle(task.title);
   };
 
-  return (
-    <div className="todolist-container">
-      <h2>Your Tasks</h2>
+  const handleLogout = () => {
+    userLogout();
+    navigate("/auth");
+  };
 
-      {/* Form to create or update task */}
-      <form onSubmit={editingTask ? handleUpdateTask : handleCreateTask}>
-        <input
+  return (
+    <S.Container>
+      <S.Header>
+        <S.Title>Your Tasks</S.Title>
+        <S.LogoutButton onClick={handleLogout}>Logout</S.LogoutButton>
+      </S.Header>
+
+      <S.Form onSubmit={editingTask ? handleUpdateTask : handleCreateTask}>
+        <S.InputField
           type="text"
           placeholder="Task Title"
           value={taskTitle}
           onChange={(e) => setTaskTitle(e.target.value)}
         />
-        <button type="submit">
+        <S.SubmitButton type="submit">
           {editingTask ? "Update Task" : "Create Task"}
-        </button>
-      </form>
+        </S.SubmitButton>
+      </S.Form>
 
-      <ul>
+      <S.List>
         {tasks.map((task) => (
-          <li key={task.id}>
-            {task.title}
-            <button onClick={() => handleEditTask(task)}>Edit</button>
-            <button onClick={() => handleDeleteTask(task.id)}>Delete</button>
-          </li>
+          <S.ListItem key={task.id}>
+            <S.TaskTitle>{task.title}</S.TaskTitle>
+            <S.TaskButtons>
+              <S.EditButton onClick={() => handleEditTask(task)}>
+                Edit
+              </S.EditButton>
+              <S.DeleteButton onClick={() => handleDeleteTask(task.id)}>
+                Delete
+              </S.DeleteButton>
+            </S.TaskButtons>
+          </S.ListItem>
         ))}
-      </ul>
-    </div>
+      </S.List>
+    </S.Container>
   );
 };
 

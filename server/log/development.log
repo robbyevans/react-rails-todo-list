@@ -35300,3 +35300,140 @@ Processing by TasksController#index as HTML
 Completed 200 OK in 3ms (Views: 1.4ms | ActiveRecord: 0.2ms | Allocations: 1468)
 
 
+Started POST "/auth/login" for 127.0.0.1 at 2024-12-01 12:27:50 +0300
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by AuthController#login as HTML
+  Parameters: {"username"=>"eddymurphy@gmail.com", "password"=>"[FILTERED]", "auth"=>{"username"=>"eddymurphy@gmail.com", "password"=>"[FILTERED]"}}
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."username" = ? LIMIT ?[0m  [["username", "eddymurphy@gmail.com"], ["LIMIT", 1]]
+  ↳ app/controllers/auth_controller.rb:5:in `login'
+Completed 200 OK in 313ms (Views: 0.2ms | ActiveRecord: 2.1ms | Allocations: 20646)
+
+
+Started GET "/tasks" for 127.0.0.1 at 2024-12-01 12:27:51 +0300
+Processing by TasksController#index as HTML
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:13:in `authorize_request'
+  [1m[36mTask Load (0.5ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."user_id" = ?[0m  [["user_id", 1]]
+  ↳ app/controllers/tasks_controller.rb:6:in `index'
+Completed 200 OK in 31ms (Views: 18.2ms | ActiveRecord: 1.2ms | Allocations: 25012)
+
+
+Started GET "/tasks" for 127.0.0.1 at 2024-12-01 12:27:51 +0300
+Processing by TasksController#index as HTML
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:13:in `authorize_request'
+  [1m[36mTask Load (0.2ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."user_id" = ?[0m  [["user_id", 1]]
+  ↳ app/controllers/tasks_controller.rb:6:in `index'
+Completed 200 OK in 7ms (Views: 3.8ms | ActiveRecord: 0.4ms | Allocations: 1470)
+
+
+Started DELETE "/tasks/1" for 127.0.0.1 at 2024-12-01 12:27:54 +0300
+Processing by TasksController#destroy as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:13:in `authorize_request'
+  [1m[36mTask Load (0.4ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."user_id" = ? AND "tasks"."id" = ? LIMIT ?[0m  [["user_id", 1], ["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/tasks_controller.rb:34:in `set_task'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/controllers/tasks_controller.rb:27:in `destroy'
+  [1m[36mTask Destroy (0.7ms)[0m  [1m[31mDELETE FROM "tasks" WHERE "tasks"."id" = ?[0m  [["id", 1]]
+  ↳ app/controllers/tasks_controller.rb:27:in `destroy'
+  [1m[36mTRANSACTION (13.9ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/controllers/tasks_controller.rb:27:in `destroy'
+Completed 204 No Content in 30ms (ActiveRecord: 15.4ms | Allocations: 2916)
+
+
+Started POST "/auth/signup" for 127.0.0.1 at 2024-12-01 12:28:25 +0300
+Processing by AuthController#signup as HTML
+  Parameters: {"username"=>"robbyevans001@gmail.com", "password"=>"[FILTERED]", "passwordConfirmation"=>"[FILTERED]", "auth"=>{"username"=>"robbyevans001@gmail.com", "password"=>"[FILTERED]", "passwordConfirmation"=>"[FILTERED]"}}
+[31mUnpermitted parameters: :passwordConfirmation, :auth. Context: { controller: AuthController, action: signup, request: #<ActionDispatch::Request:0x0000784070027870>, params: {"username"=>"robbyevans001@gmail.com", "password"=>"[FILTERED]", "passwordConfirmation"=>"[FILTERED]", "controller"=>"auth", "action"=>"signup", "auth"=>{"username"=>"robbyevans001@gmail.com", "password"=>"[FILTERED]", "passwordConfirmation"=>"[FILTERED]"}} }[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/controllers/auth_controller.rb:18:in `signup'
+  [1m[36mUser Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."username" = ? LIMIT ?[0m  [["username", "robbyevans001@gmail.com"], ["LIMIT", 1]]
+  ↳ app/controllers/auth_controller.rb:18:in `signup'
+  [1m[36mUser Create (7.8ms)[0m  [1m[32mINSERT INTO "users" ("username", "password_digest", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["username", "robbyevans001@gmail.com"], ["password_digest", "[FILTERED]"], ["created_at", "2024-12-01 09:28:26.263438"], ["updated_at", "2024-12-01 09:28:26.263438"]]
+  ↳ app/controllers/auth_controller.rb:18:in `signup'
+  [1m[36mTRANSACTION (6.1ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/controllers/auth_controller.rb:18:in `signup'
+Completed 201 Created in 420ms (Views: 0.4ms | ActiveRecord: 14.0ms | Allocations: 4109)
+
+
+Started POST "/auth/signup" for 127.0.0.1 at 2024-12-01 12:28:38 +0300
+Processing by AuthController#signup as HTML
+  Parameters: {"username"=>"robbyevans001@gmail.com", "password"=>"[FILTERED]", "passwordConfirmation"=>"[FILTERED]", "auth"=>{"username"=>"robbyevans001@gmail.com", "password"=>"[FILTERED]", "passwordConfirmation"=>"[FILTERED]"}}
+[31mUnpermitted parameters: :passwordConfirmation, :auth. Context: { controller: AuthController, action: signup, request: #<ActionDispatch::Request:0x00007840840157d8>, params: {"username"=>"robbyevans001@gmail.com", "password"=>"[FILTERED]", "passwordConfirmation"=>"[FILTERED]", "controller"=>"auth", "action"=>"signup", "auth"=>{"username"=>"robbyevans001@gmail.com", "password"=>"[FILTERED]", "passwordConfirmation"=>"[FILTERED]"}} }[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/controllers/auth_controller.rb:18:in `signup'
+  [1m[36mUser Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."username" = ? LIMIT ?[0m  [["username", "robbyevans001@gmail.com"], ["LIMIT", 1]]
+  ↳ app/controllers/auth_controller.rb:18:in `signup'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  ↳ app/controllers/auth_controller.rb:18:in `signup'
+Completed 422 Unprocessable Entity in 415ms (Views: 0.3ms | ActiveRecord: 0.2ms | Allocations: 3785)
+
+
+Started POST "/auth/login" for 127.0.0.1 at 2024-12-01 12:28:57 +0300
+Processing by AuthController#login as HTML
+  Parameters: {"username"=>"robbyevans001@gmail.com", "password"=>"[FILTERED]", "auth"=>{"username"=>"robbyevans001@gmail.com", "password"=>"[FILTERED]"}}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."username" = ? LIMIT ?[0m  [["username", "robbyevans001@gmail.com"], ["LIMIT", 1]]
+  ↳ app/controllers/auth_controller.rb:5:in `login'
+Completed 200 OK in 354ms (Views: 0.1ms | ActiveRecord: 0.3ms | Allocations: 602)
+
+
+Started GET "/tasks" for 127.0.0.1 at 2024-12-01 12:28:57 +0300
+Processing by TasksController#index as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:13:in `authorize_request'
+  [1m[36mTask Load (0.1ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."user_id" = ?[0m  [["user_id", 6]]
+  ↳ app/controllers/tasks_controller.rb:6:in `index'
+Completed 200 OK in 4ms (Views: 2.4ms | ActiveRecord: 0.3ms | Allocations: 1229)
+
+
+Started GET "/tasks" for 127.0.0.1 at 2024-12-01 12:28:57 +0300
+Processing by TasksController#index as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:13:in `authorize_request'
+  [1m[36mTask Load (0.1ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."user_id" = ?[0m  [["user_id", 6]]
+  ↳ app/controllers/tasks_controller.rb:6:in `index'
+Completed 200 OK in 16ms (Views: 1.0ms | ActiveRecord: 0.2ms | Allocations: 1229)
+
+
+Started POST "/tasks" for 127.0.0.1 at 2024-12-01 12:29:04 +0300
+Processing by TasksController#create as HTML
+  Parameters: {"title"=>"hello", "task"=>{"title"=>"hello"}}
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 6], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:13:in `authorize_request'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/controllers/tasks_controller.rb:11:in `create'
+  [1m[36mTask Create (0.7ms)[0m  [1m[32mINSERT INTO "tasks" ("title", "description", "completed", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["title", "hello"], ["description", nil], ["completed", 0], ["user_id", 6], ["created_at", "2024-12-01 09:29:04.829000"], ["updated_at", "2024-12-01 09:29:04.829000"]]
+  ↳ app/controllers/tasks_controller.rb:11:in `create'
+  [1m[36mTRANSACTION (14.2ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/controllers/tasks_controller.rb:11:in `create'
+Completed 201 Created in 35ms (Views: 1.4ms | ActiveRecord: 15.5ms | Allocations: 3694)
+
+
+Started POST "/auth/login" for 127.0.0.1 at 2024-12-01 12:29:09 +0300
+Processing by AuthController#login as HTML
+  Parameters: {"username"=>"eddymurphy@gmail.com", "password"=>"[FILTERED]", "auth"=>{"username"=>"eddymurphy@gmail.com", "password"=>"[FILTERED]"}}
+  [1m[36mUser Load (0.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."username" = ? LIMIT ?[0m  [["username", "eddymurphy@gmail.com"], ["LIMIT", 1]]
+  ↳ app/controllers/auth_controller.rb:5:in `login'
+Completed 200 OK in 403ms (Views: 0.1ms | ActiveRecord: 0.5ms | Allocations: 602)
+
+
+Started GET "/tasks" for 127.0.0.1 at 2024-12-01 12:29:09 +0300
+Processing by TasksController#index as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:13:in `authorize_request'
+  [1m[36mTask Load (0.1ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."user_id" = ?[0m  [["user_id", 1]]
+  ↳ app/controllers/tasks_controller.rb:6:in `index'
+Completed 200 OK in 4ms (Views: 2.3ms | ActiveRecord: 0.3ms | Allocations: 1348)
+
+
+Started GET "/tasks" for 127.0.0.1 at 2024-12-01 12:29:09 +0300
+Processing by TasksController#index as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:13:in `authorize_request'
+  [1m[36mTask Load (0.1ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE "tasks"."user_id" = ?[0m  [["user_id", 1]]
+  ↳ app/controllers/tasks_controller.rb:6:in `index'
+Completed 200 OK in 2ms (Views: 1.1ms | ActiveRecord: 0.1ms | Allocations: 1348)
+
+

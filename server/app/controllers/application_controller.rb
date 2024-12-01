@@ -1,17 +1,20 @@
 class ApplicationController < ActionController::API
   before_action :authorize_request
 
-  # Define current_user method to make @current_user accessible in controllers
-  def current_user
-    @current_user
-  end
+  attr_reader :current_user
+
+  private
 
   def authorize_request
     header = request.headers['Authorization']
-    token = header.split(' ').last if header
-    decoded = JsonWebToken.decode(token)
-    @current_user = User.find(decoded[:user_id]) if decoded
-  rescue
-    render json: { error: 'Unauthorized access' }, status: :unauthorized
+    header = header.split(' ').last if header
+    begin
+      decoded = JsonWebToken.decode(header)
+      @current_user = User.find(decoded[:user_id])
+    rescue ActiveRecord::RecordNotFound => e
+      render json: { error: e.message }, status: :unauthorized
+    rescue JWT::DecodeError => e
+      render json: { error: 'Unauthorized access' }, status: :unauthorized
+    end
   end
 end
